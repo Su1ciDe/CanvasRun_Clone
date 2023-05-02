@@ -28,14 +28,14 @@ namespace Gameplay
 
 		private void OnEnable()
 		{
-			movingObject.OnBallAdded += OnBallAdded;
-			movingObject.OnBallRemoved += OnBallRemoved;
+			movingObject.OnFollowerColumnAdded += OnFollowerColumnAdded;
+			movingObject.OnFollowerColumnRemoved += OnFollowerColumnRemoved;
 		}
 
 		private void OnDisable()
 		{
-			movingObject.OnBallAdded -= OnBallAdded;
-			movingObject.OnBallRemoved -= OnBallRemoved;
+			movingObject.OnFollowerColumnAdded -= OnFollowerColumnAdded;
+			movingObject.OnFollowerColumnRemoved -= OnFollowerColumnRemoved;
 		}
 
 		private void FixedUpdate()
@@ -62,13 +62,13 @@ namespace Gameplay
 			delta = deltaX;
 		}
 
-		private void OnBallAdded()
+		private void OnFollowerColumnAdded()
 		{
 			leftLimit += movingObject.BallSize / 2f;
 			rightLimit -= movingObject.BallSize / 2f;
 		}
 
-		private void OnBallRemoved()
+		private void OnFollowerColumnRemoved()
 		{
 			leftLimit -= movingObject.BallSize / 2f;
 			rightLimit += movingObject.BallSize / 2f;
