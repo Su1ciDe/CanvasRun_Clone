@@ -9,7 +9,9 @@ namespace Gameplay
 
 		private MovingObject movingObject;
 
-		private Vector3 playerPos;
+		private Vector3 objectPos;
+		private Vector3 objectRot;
+		private const float rotationMultiplier = 90;
 
 		[SerializeField] private float leftLimit = -1;
 		[SerializeField] private float rightLimit = 1;
@@ -36,17 +38,23 @@ namespace Gameplay
 			movingObject.OnBallRemoved -= OnBallRemoved;
 		}
 
-		private void Update()
+		private void FixedUpdate()
 		{
 			Move();
+			Rotate();
 		}
 
 		private void Move()
 		{
 			if (!CanMove) return;
-			playerPos = transform.position;
-			playerPos.x = Mathf.Clamp(playerPos.x + delta, leftLimit, rightLimit);
-			transform.position = playerPos;
+			objectPos = transform.position;
+			objectPos.x = Mathf.Clamp(objectPos.x + delta, leftLimit, rightLimit);
+			transform.position = objectPos;
+		}
+
+		private void Rotate()
+		{
+			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.AngleAxis(delta * rotationMultiplier, Vector3.up), Time.deltaTime * 10);
 		}
 
 		private void OnInputDrag(float deltaX)
@@ -56,14 +64,14 @@ namespace Gameplay
 
 		private void OnBallAdded()
 		{
-			leftLimit += movingObject.BallSize;
-			rightLimit -= movingObject.BallSize;
+			leftLimit += movingObject.BallSize / 2f;
+			rightLimit -= movingObject.BallSize / 2f;
 		}
 
 		private void OnBallRemoved()
 		{
-			leftLimit -= movingObject.BallSize;
-			rightLimit += movingObject.BallSize;
+			leftLimit -= movingObject.BallSize / 2f;
+			rightLimit += movingObject.BallSize / 2f;
 		}
 	}
 }

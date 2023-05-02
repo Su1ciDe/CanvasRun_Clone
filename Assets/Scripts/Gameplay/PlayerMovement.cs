@@ -7,12 +7,15 @@ namespace Gameplay
 		public bool CanMoveForward { get; set; } = true;
 
 		[SerializeField] private float moveForwardSpeed = 1;
-		
+
+		private Rigidbody rb;
+
 		private void Awake()
 		{
+			rb = GetComponent<Rigidbody>();
 		}
 
-		private void Update()
+		private void FixedUpdate()
 		{
 			MoveForward();
 		}
@@ -20,7 +23,11 @@ namespace Gameplay
 		private void MoveForward()
 		{
 			if (!CanMoveForward) return;
-			transform.Translate(moveForwardSpeed * Time.deltaTime * Vector3.forward);
+			var velocity = rb.velocity;
+			velocity.z = moveForwardSpeed;
+			rb.velocity = velocity;
+			
+			// transform.Translate(moveForwardSpeed * Time.deltaTime * Vector3.forward);
 		}
 	}
 }
