@@ -18,5 +18,10 @@ namespace Stack
 		{
 			PreviousPosition = rb.position;
 		}
+
+		public void DestroySelf()
+		{
+			gameObject.SetActive(false);
+		}
 	}
 }

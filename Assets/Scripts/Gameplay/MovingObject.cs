@@ -4,6 +4,7 @@ using DG.Tweening;
 using Stack;
 using UnityEngine;
 using UnityEngine.Events;
+using Utilities;
 
 namespace Gameplay
 {
@@ -25,8 +26,8 @@ namespace Gameplay
 		public int CurrentStackWidth { get; private set; }
 		public int CurrentStackLength { get; private set; }
 
-		[SerializeField] private Transform followerPoint;
 		[SerializeField] private Follower followerPrefab;
+		[SerializeField] private Transform followerPointPrefab;
 		[Space]
 		[SerializeField] private int startingBallColumnCount = 4;
 		[SerializeField] private int startingBallRowCount = 10;
@@ -34,8 +35,6 @@ namespace Gameplay
 		public float BallSize => ballSize;
 		[Space]
 		[SerializeField] private float ballSize = .1f;
-
-		private FollowPointGenerator followPointGenerator;
 
 		public event UnityAction OnFollowerColumnAdded;
 		public event UnityAction OnFollowerColumnRemoved;
@@ -45,8 +44,6 @@ namespace Gameplay
 
 		private void Awake()
 		{
-			followPointGenerator = GetComponent<FollowPointGenerator>();
-
 			transform.localPosition = new Vector3(0, ballSize / 2f, 0);
 		}
 
@@ -62,15 +59,15 @@ namespace Gameplay
 
 		private void Follow()
 		{
-			int columCount = FollowerStack.Count;
-			for (int i = 0; i < columCount; i++)
+			for (int i = 0; i < CurrentStackWidth; i++)
 			{
+				var rowCount = FollowerStack[i].Count;
+				if (rowCount <= 0) continue;
 				FollowerStack[i][0].transform.position = followerPoints[i].transform.position;
-				for (int j = 1; j < FollowerStack[i].Count; j++)
+				for (int j = 1; j < rowCount; j++)
 				{
 					var previousFollower = FollowerStack[i][j - 1];
 					var newPos = previousFollower.PreviousPosition;
-					// newPos.z = previousFollower.transform.position.z - ballSize;
 					FollowerStack[i][j].transform.position = newPos;
 				}
 			}
@@ -87,29 +84,60 @@ namespace Gameplay
 
 			CurrentStackLength = startingBallRowCount;
 			OnFollowerRowAdded?.Invoke();
+
+			ReadjustFollowingPoints();
+		}
+
+		private Follower SpawnFollower(Vector3 pos)
+		{
+			var follower = Instantiate(followerPrefab, pos, Quaternion.identity);
+			TotalFollowerCount++;
+			return follower;
+		}
+
+		public void RemoveFollower(Follower follower)
+		{
+			follower.DestroySelf();
+			var coordinates = FollowerStack.GetCoordinates(follower);
+			FollowerStack[coordinates.x].RemoveAt(coordinates.y);
+			TotalFollowerCount--;
+
+			if (FollowerStack[coordinates.x].Count > 0)
+			{
+				followerPoints[coordinates.x].DOKill();
+				followerPoints[coordinates.x].position = FollowerStack[coordinates.x][0].transform.position;
+				followerPoints[coordinates.x].DOLocalMove(new Vector3(FindFollowerPosition(coordinates.x, CurrentStackWidth), 0, 0), .15f).SetEase(Ease.Linear)
+					.SetUpdate(UpdateType.Fixed);
+			}
+			else
+			{
+				RemoveColumn(coordinates.x);
+			}
 		}
 
 		private void AddColumn(int columnIndex, int columnCount, int rowCount, bool isAnimated = false)
 		{
 			// to choose a side for followerPoint (left/right)
 			int side = columnIndex % 2 == 0 ? -1 : 1;
-			var followerPointT = Instantiate(followerPoint, transform);
-			followerPoints.Add(followerPointT);
-			var posX = side * Mathf.FloorToInt(columnCount / 2f) * ballSize;
+			var followerPointT = Instantiate(followerPointPrefab, transform);
+			if (side.Equals(1))
+				followerPoints.Add(followerPointT);
+			else
+				followerPoints.Insert(0, followerPointT);
+			var posX = side * (Mathf.FloorToInt(columnCount / 2f) + 1 / 2f) * ballSize;
 			if (!isAnimated)
 				followerPointT.localPosition = posX * Vector3.right;
 			else
-				followerPointT.DOLocalMoveX(posX, 3f).SetSpeedBased(true).SetEase(Ease.Linear);
+				followerPointT.DOLocalMoveX(posX, 4f).SetSpeedBased(true).SetEase(Ease.Linear);
 
 			var tempRowFollowers = new List<Follower>();
 			for (int j = 0; j < rowCount; j++)
 			{
 				var followerPos = new Vector3(followerPointT.transform.position.x, ballSize / 2f, transform.position.z);
 				// TODO: change with pooling
-				var follower = Instantiate(followerPrefab, followerPos, Quaternion.identity);
+				var follower = SpawnFollower(followerPos);
 
 				tempRowFollowers.Add(follower);
-				TotalFollowerCount++;
 			}
 
 			if (side.Equals(1))
@@ -130,14 +158,18 @@ namespace Gameplay
 			}
 		}
 
-		public void RemoveColumn()
+		public void RemoveColumn(int index)
 		{
-			OnFollowerColumnRemoved?.Invoke();
-		}
+			FollowerStack.RemoveAt(index);
+			var removedFollowerPoint = followerPoints[index];
+			followerPoints.RemoveAt(index);
+			removedFollowerPoint.DOKill();
+			Destroy(removedFollowerPoint.gameObject);
 
-		public void RemoveColumnAt(int columnIndex)
-		{
+			CurrentStackWidth--;
 			OnFollowerColumnRemoved?.Invoke();
+
+			ReadjustFollowingPoints(true);
 		}
 
 		public void AddRowByCount(int rowCount)
@@ -147,10 +179,8 @@ namespace Gameplay
 			{
 				for (int j = 0; j < CurrentStackWidth; j++)
 				{
-					var followerPos = new Vector3(transform.position.x + (j - CurrentStackWidth / 2f + ballSize) * ballSize, ballSize / 2f, 0);
-					var follower = Instantiate(followerPrefab, followerPos, Quaternion.identity);
-
-					TotalFollowerCount++;
+					var followerPos = new Vector3(transform.position.x + FindFollowerPosition(j, CurrentStackWidth) * ballSize, ballSize / 2f, 0);
+					var follower = SpawnFollower(followerPos);
 
 					FollowerStack[j].Add(follower);
 				}
@@ -160,9 +190,30 @@ namespace Gameplay
 			}
 		}
 
-		public void RemoveRow()
+		public void RemoveRow(int index)
 		{
 			OnFollowerRowRemoved?.Invoke();
+		}
+
+		private void ReadjustFollowingPoints(bool isAnimated = false)
+		{
+			for (int i = 0; i < followerPoints.Count; i++)
+			{
+				float posX = FindFollowerPosition(i, CurrentStackWidth);
+				if (isAnimated)
+				{
+					followerPoints[i].DOLocalMoveX(posX, .5f).SetEase(Ease.Linear);
+				}
+				else
+				{
+					followerPoints[i].transform.localPosition = posX * Vector3.right;
+				}
+			}
+		}
+
+		private float FindFollowerPosition(int index, int width)
+		{
+			return (index - (width / 2f - .5f)) * ballSize;
 		}
 	}
 }
