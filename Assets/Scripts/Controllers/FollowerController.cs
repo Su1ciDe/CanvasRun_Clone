@@ -88,9 +88,10 @@ namespace Controllers
 			ReadjustFollowingPoints();
 		}
 
-		private Follower SpawnFollower(Vector3 pos)
+		private Follower SpawnFollower(Vector3 pos, int rowIndex)
 		{
 			var follower = Instantiate(followerPrefab, pos, Quaternion.identity);
+			follower.ChangeColor(rowIndex);
 			TotalFollowerCount++;
 			return follower;
 		}
@@ -143,7 +144,7 @@ namespace Controllers
 			{
 				var followerPos = new Vector3(followerPointT.transform.position.x, ballSize / 2f, transform.position.z);
 				// TODO: change with pooling
-				var follower = SpawnFollower(followerPos);
+				var follower = SpawnFollower(followerPos, j);
 
 				tempRowFollowers.Add(follower);
 			}
@@ -203,7 +204,7 @@ namespace Controllers
 				for (int j = 0; j < CurrentStackWidth; j++)
 				{
 					var followerPos = new Vector3(transform.position.x + FindFollowerPosition(j, CurrentStackWidth) * ballSize, ballSize / 2f, 0);
-					var follower = SpawnFollower(followerPos);
+					var follower = SpawnFollower(followerPos, CurrentStackLength);
 
 					FollowerStack[j].Add(follower);
 				}
