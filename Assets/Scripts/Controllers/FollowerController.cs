@@ -10,6 +10,8 @@ namespace Controllers
 {
 	public class FollowerController : MonoBehaviour
 	{
+		public bool CanFollow { get; set; } = true;
+
 		public List<List<Follower>> FollowerStack = new List<List<Follower>>();
 		private List<Transform> followerPoints = new List<Transform>();
 
@@ -59,6 +61,8 @@ namespace Controllers
 
 		private void Follow()
 		{
+			if (!CanFollow) return;
+
 			for (int i = 0; i < CurrentStackWidth; i++)
 			{
 				var rowCount = FollowerStack[i].Count;
@@ -75,6 +79,7 @@ namespace Controllers
 
 		private IEnumerator InitFollowerStack()
 		{
+			// Wait one frame for the subscriptions
 			yield return null;
 
 			for (int i = 0; i < startingBallColumnCount; i++)

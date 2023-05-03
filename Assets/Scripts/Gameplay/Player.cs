@@ -18,7 +18,7 @@ namespace Gameplay
 		[Space]
 		[SerializeField] private Collider trigger;
 
-		public static event UnityAction<Vector3> OnCollectGem;
+		public static event UnityAction<Gem> OnCollectGem;
 
 		private void Awake()
 		{
@@ -26,10 +26,10 @@ namespace Gameplay
 			PlayerMovement = GetComponent<PlayerMovement>();
 		}
 
-		public void CollectGem(int gemAmount, Vector3 gemPosition)
+		public void CollectGem(Gem gem)
 		{
-			GameManager.Instance.GemScore += gemAmount;
-			OnCollectGem?.Invoke(gemPosition);
+			GameManager.Instance.GemScore += gem.Score;
+			OnCollectGem?.Invoke(gem);
 		}
 
 		public void BoostSpeed(float boostAmount)
