@@ -1,4 +1,5 @@
 using System.Collections;
+using Collectibles;
 using Controllers;
 using Interfaces;
 using Managers;
@@ -26,6 +27,13 @@ namespace Gameplay
 			PlayerMovement = GetComponent<PlayerMovement>();
 		}
 
+		public void Finish()
+		{
+			Input.CanInput = false;
+			FollowerController.CanFollow = false;
+			PlayerMovement.CanMoveForward = false;
+		}
+
 		public void CollectGem(Gem gem)
 		{
 			GameManager.Instance.GemScore += gem.Score;
@@ -40,7 +48,7 @@ namespace Gameplay
 		private IEnumerator BoostCoroutine(float boostAmount)
 		{
 			PlayerMovement.BoostSpeed(boostAmount);
-			GameManager.Instance.MainCameraController.ShakeFov(85, 2);
+			GameManager.Instance.MainCameraController.BoostFov(85, 2);
 
 			trigger.enabled = false;
 

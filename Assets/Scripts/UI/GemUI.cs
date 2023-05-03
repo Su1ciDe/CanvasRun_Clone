@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using Collectibles;
+using DG.Tweening;
 using Gameplay;
 using Managers;
 using TMPro;

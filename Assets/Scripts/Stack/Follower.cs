@@ -31,5 +31,13 @@ namespace Stack
 		{
 			mRenderer.material.color = Color.HSVToRGB((rowIndex / huePower) % 1f, .6f, 1);
 		}
+
+		public void AddForce(Vector3 force)
+		{
+			Rb.isKinematic = false;
+			Rb.constraints = RigidbodyConstraints.None;
+
+			Rb.AddForce(force);
+		}
 	}
 }

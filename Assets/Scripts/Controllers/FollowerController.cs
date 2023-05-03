@@ -111,8 +111,7 @@ namespace Controllers
 		public void RemoveFollower((int x, int y) index)
 		{
 			FollowerStack[index.x][index.y].DestroySelf();
-			FollowerStack[index.x].RemoveAt(index.y);
-			TotalFollowerCount--;
+			RemoveFollowerFromStack(index);
 
 			if (FollowerStack[index.x].Count > 0)
 			{
@@ -125,6 +124,12 @@ namespace Controllers
 			{
 				RemoveColumn(index.x);
 			}
+		}
+
+		public void RemoveFollowerFromStack((int x, int y) index)
+		{
+			FollowerStack[index.x].RemoveAt(index.y);
+			TotalFollowerCount--;
 		}
 
 		#region Column

@@ -27,7 +27,12 @@ namespace Gameplay
 
 		private void MoveForward()
 		{
-			if (!CanMoveForward) return;
+			if (!CanMoveForward)
+			{
+				rb.velocity = Vector3.zero;
+				return;
+			}
+
 			var velocity = rb.velocity;
 			velocity.z = moveForwardSpeed * multiplier;
 			rb.velocity = velocity;

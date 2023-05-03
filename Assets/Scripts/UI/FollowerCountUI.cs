@@ -26,7 +26,15 @@ namespace UI
 
 		private void OnFollowerCountChanged(int followerCount)
 		{
-			txtFollowerCount.SetText(followerCount.ToString());
+			if (followerCount <= 0)
+			{
+				gameObject.SetActive(false);
+			}
+			else
+			{
+				gameObject.SetActive(true);
+				txtFollowerCount.SetText(followerCount.ToString());
+			}
 		}
 	}
 }

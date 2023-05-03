@@ -19,7 +19,7 @@ namespace Controllers
 			vcam.m_Follow = target;
 		}
 		
-		public void ShakeFov(float targetFov, float duration)
+		public void BoostFov(float targetFov, float duration)
 		{
 			float tempFov = vcam.m_Lens.FieldOfView;
 			vcam.DOComplete();
