@@ -6,8 +6,14 @@ namespace Managers
 {
 	public class GameManager : Singleton<GameManager>
 	{
-		public CameraController CameraController => cameraController;
-		[SerializeField] private CameraController cameraController;
+		public int GemScore
+		{
+			get => PlayerPrefs.GetInt("GemScore", 0);
+			set => PlayerPrefs.SetInt("GemScore", value);
+		}
+		
+		public CameraController MainCameraController => mainCameraController;
+		[SerializeField] private CameraController mainCameraController;
 
 		private void Awake()
 		{

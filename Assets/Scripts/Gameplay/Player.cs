@@ -3,6 +3,7 @@ using Controllers;
 using Interfaces;
 using Managers;
 using UnityEngine;
+using UnityEngine.Events;
 using Utilities;
 
 namespace Gameplay
@@ -17,10 +18,18 @@ namespace Gameplay
 		[Space]
 		[SerializeField] private Collider trigger;
 
+		public static event UnityAction<Vector3> OnCollectGem;
+
 		private void Awake()
 		{
 			Input = GetComponent<IInput>();
 			PlayerMovement = GetComponent<PlayerMovement>();
+		}
+
+		public void CollectGem(int gemAmount, Vector3 gemPosition)
+		{
+			GameManager.Instance.GemScore += gemAmount;
+			OnCollectGem?.Invoke(gemPosition);
 		}
 
 		public void BoostSpeed(float boostAmount)
@@ -31,7 +40,7 @@ namespace Gameplay
 		private IEnumerator BoostCoroutine(float boostAmount)
 		{
 			PlayerMovement.BoostSpeed(boostAmount);
-			GameManager.Instance.CameraController.ShakeFov(85, 2);
+			GameManager.Instance.MainCameraController.ShakeFov(85, 2);
 
 			trigger.enabled = false;
 
