@@ -4,9 +4,10 @@ using Utilities;
 
 namespace Managers
 {
+	[DefaultExecutionOrder(-1)]
 	public class GameManager : Singleton<GameManager>
 	{
-		public int GemScore
+		public static int GemScore
 		{
 			get => PlayerPrefs.GetInt("GemScore", 0);
 			set => PlayerPrefs.SetInt("GemScore", value);
@@ -18,8 +19,10 @@ namespace Managers
 
 		private void Awake()
 		{
+			Input.multiTouchEnabled = false;
 			Application.targetFrameRate = 60;
-			
+			Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
 			MainCamera = Camera.main;
 		}
 	}

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Gameplay;
+using Managers;
 using Stack;
 using UnityEngine;
 using UnityEngine.Events;
@@ -130,6 +132,9 @@ namespace Controllers
 		{
 			FollowerStack[index.x].RemoveAt(index.y);
 			TotalFollowerCount--;
+			
+			if (TotalFollowerCount.Equals(0) && !Player.Instance.IsLevelFinished)
+				LevelManager.Instance.Lose();
 		}
 
 		#region Column

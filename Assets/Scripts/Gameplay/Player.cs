@@ -11,6 +11,8 @@ namespace Gameplay
 {
 	public class Player : Singleton<Player>
 	{
+		public bool IsLevelFinished { get; set; }
+		
 		public IInput Input { get; private set; }
 		public PlayerMovement PlayerMovement { get; private set; }
 		public FollowerController FollowerController => followerController;
@@ -27,8 +29,55 @@ namespace Gameplay
 			PlayerMovement = GetComponent<PlayerMovement>();
 		}
 
-		public void Finish()
+		#region Level Actions
+
+		private void OnEnable()
 		{
+			LevelManager.OnLevelLoad += OnLevelLoaded;
+			LevelManager.OnLevelStart += OnLevelStarted;
+			LevelManager.OnLevelSuccess += OnLevelWon;
+			LevelManager.OnLevelFail += OnLevelFailed;
+		}
+
+		private void OnDisable()
+		{
+			LevelManager.OnLevelLoad -= OnLevelLoaded;
+			LevelManager.OnLevelStart -= OnLevelStarted;
+			LevelManager.OnLevelSuccess -= OnLevelWon;
+			LevelManager.OnLevelFail -= OnLevelFailed;
+		}
+
+		private void OnLevelLoaded()
+		{
+			GameManager.Instance.MainCameraController.SetFollowTarget(transform);
+		}
+
+		private void OnLevelStarted()
+		{
+			Input.CanInput = true;
+			FollowerController.CanFollow = true;
+			PlayerMovement.CanMoveForward = true;
+		}
+
+		private void OnLevelWon()
+		{
+			Input.CanInput = false;
+			FollowerController.CanFollow = false;
+			PlayerMovement.CanMoveForward = false;
+		}
+
+		private void OnLevelFailed()
+		{
+			Input.CanInput = false;
+			FollowerController.CanFollow = false;
+			PlayerMovement.CanMoveForward = false;
+		}
+
+		#endregion
+
+		public void FinishLine()
+		{
+			IsLevelFinished = true;
 			Input.CanInput = false;
 			FollowerController.CanFollow = false;
 			PlayerMovement.CanMoveForward = false;
@@ -36,7 +85,7 @@ namespace Gameplay
 
 		public void CollectGem(Gem gem)
 		{
-			GameManager.Instance.GemScore += gem.Score;
+			GameManager.GemScore += gem.Score;
 			OnCollectGem?.Invoke(gem);
 		}
 

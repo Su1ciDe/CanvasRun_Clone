@@ -19,7 +19,7 @@ namespace UI
 
 		private void Start()
 		{
-			SetGemText(GameManager.Instance.GemScore);
+			SetGemText(GameManager.GemScore);
 		}
 
 		private void OnEnable()
@@ -46,7 +46,7 @@ namespace UI
 				imageTarget.DOPunchScale(Vector3.one * .9f, .2f, 2, .5f);
 
 				imgCoin.SetActive(false);
-				SetGemText(GameManager.Instance.GemScore);
+				SetGemText(GameManager.GemScore);
 			});
 		}
 	}

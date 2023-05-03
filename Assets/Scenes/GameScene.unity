@@ -3891,7 +3891,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1001581855}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 241.75}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -3900,8 +3900,8 @@ Transform:
   - {fileID: 1162841785}
   - {fileID: 1614669322}
   - {fileID: 1200789564}
-  m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_Father: {fileID: 1065097078}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1013424398
 GameObject:
@@ -4385,6 +4385,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1065097078}
+  - component: {fileID: 1065097079}
   m_Layer: 0
   m_Name: Level_00
   m_TagString: Untagged
@@ -4409,9 +4410,22 @@ Transform:
   - {fileID: 1221321724}
   - {fileID: 2058297295}
   - {fileID: 820927379}
+  - {fileID: 1001581858}
   m_Father: {fileID: 0}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1065097079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1065097077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ef390925ddc40c0819388227127240e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1069745314
 GameObject:
   m_ObjectHideFlags: 0
@@ -8043,6 +8057,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1896603145}
+  - component: {fileID: 1896603146}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -8065,6 +8080,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1896603146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1896603144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46b84093f8624df8bbf58bd8e4ea38d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TutorialLevels: []
+  Levels:
+  - {fileID: 1065097079}
 --- !u!1 &1922516957
 GameObject:
   m_ObjectHideFlags: 0

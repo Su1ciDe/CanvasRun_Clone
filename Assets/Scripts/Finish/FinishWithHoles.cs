@@ -2,6 +2,7 @@
 using Cinemachine;
 using Controllers;
 using Gameplay;
+using Managers;
 using Stack;
 using UnityEngine;
 
@@ -43,7 +44,7 @@ namespace Finish
 		{
 			if (other.attachedRigidbody && other.attachedRigidbody.TryGetComponent(out Player player))
 			{
-				player.Finish();
+				player.FinishLine();
 				vcamFinish.gameObject.SetActive(true);
 
 				StartCoroutine(ShootFollowers(player.FollowerController));
@@ -95,6 +96,7 @@ namespace Finish
 
 			isFinished = true;
 			Debug.Log("finish");
+			LevelManager.Instance.Win();
 		}
 	}
 }
