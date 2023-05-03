@@ -7,7 +7,7 @@ namespace Obstacles
 	{
 		protected override void OnCollide(Follower follower)
 		{
-			Player.Instance.MovingObject.RemoveFollower(follower);
+			Player.Instance.FollowerController.RemoveFollower(follower);
 		}
 	}
 }

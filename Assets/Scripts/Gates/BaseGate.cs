@@ -11,7 +11,7 @@ namespace Gates
 		[Space]
 		[SerializeField] private TextMeshPro txtAmount;
 
-		
+		protected const float boostAmount = 1.5f;
 
 		private void OnTriggerEnter(Collider other)
 		{
@@ -21,7 +21,11 @@ namespace Gates
 			}
 		}
 
-		protected abstract void OnEnter(Player player);
+		protected virtual void OnEnter(Player player)
+		{
+			player.BoostSpeed(boostAmount);
+			gameObject.SetActive(false);
+		}
 
 		protected virtual void SetAmountText()
 		{

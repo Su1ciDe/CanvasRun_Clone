@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
+using UnityEngine;
 
 namespace Gameplay
 {
@@ -7,6 +8,10 @@ namespace Gameplay
 		public bool CanMoveForward { get; set; } = true;
 
 		[SerializeField] private float moveForwardSpeed = 1;
+		[Header("Boost")]
+		[SerializeField] private float boostDuration = 1;
+
+		private float multiplier = 1;
 
 		private Rigidbody rb;
 
@@ -24,10 +29,19 @@ namespace Gameplay
 		{
 			if (!CanMoveForward) return;
 			var velocity = rb.velocity;
-			velocity.z = moveForwardSpeed;
+			velocity.z = moveForwardSpeed * multiplier;
 			rb.velocity = velocity;
-			
+
 			// transform.Translate(moveForwardSpeed * Time.deltaTime * Vector3.forward);
+		}
+
+		public void BoostSpeed(float boostAmount)
+		{
+			transform.DOKill();
+
+			multiplier = boostAmount;
+
+			DOTween.To(() => multiplier, x => multiplier = x, 1, boostDuration * 2).SetDelay(boostDuration).SetEase(Ease.InOutSine).SetTarget(transform);
 		}
 	}
 }

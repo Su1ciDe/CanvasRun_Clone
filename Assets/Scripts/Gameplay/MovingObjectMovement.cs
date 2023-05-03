@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Controllers;
+using UnityEngine;
 
 namespace Gameplay
 {
@@ -7,7 +8,7 @@ namespace Gameplay
 		public bool CanMove { get; set; } = true;
 		private float delta;
 
-		private MovingObject movingObject;
+		private FollowerController followerController;
 
 		private Vector3 objectPos;
 		private Vector3 objectRot;
@@ -18,7 +19,7 @@ namespace Gameplay
 
 		private void Awake()
 		{
-			movingObject = GetComponent<MovingObject>();
+			followerController = GetComponent<FollowerController>();
 		}
 
 		private void Start()
@@ -28,14 +29,14 @@ namespace Gameplay
 
 		private void OnEnable()
 		{
-			movingObject.OnFollowerColumnAdded += OnFollowerColumnAdded;
-			movingObject.OnFollowerColumnRemoved += OnFollowerColumnRemoved;
+			followerController.OnFollowerColumnAdded += OnFollowerColumnAdded;
+			followerController.OnFollowerColumnRemoved += OnFollowerColumnRemoved;
 		}
 
 		private void OnDisable()
 		{
-			movingObject.OnFollowerColumnAdded -= OnFollowerColumnAdded;
-			movingObject.OnFollowerColumnRemoved -= OnFollowerColumnRemoved;
+			followerController.OnFollowerColumnAdded -= OnFollowerColumnAdded;
+			followerController.OnFollowerColumnRemoved -= OnFollowerColumnRemoved;
 		}
 
 		private void FixedUpdate()
@@ -64,14 +65,14 @@ namespace Gameplay
 
 		private void OnFollowerColumnAdded()
 		{
-			leftLimit += movingObject.BallSize / 2f;
-			rightLimit -= movingObject.BallSize / 2f;
+			leftLimit += followerController.BallSize / 2f;
+			rightLimit -= followerController.BallSize / 2f;
 		}
 
 		private void OnFollowerColumnRemoved()
 		{
-			leftLimit -= movingObject.BallSize / 2f;
-			rightLimit += movingObject.BallSize / 2f;
+			leftLimit -= followerController.BallSize / 2f;
+			rightLimit += followerController.BallSize / 2f;
 		}
 	}
 }

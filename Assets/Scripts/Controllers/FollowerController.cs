@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.Events;
 using Utilities;
 
-namespace Gameplay
+namespace Controllers
 {
-	public class MovingObject : MonoBehaviour
+	public class FollowerController : MonoBehaviour
 	{
 		public List<List<Follower>> FollowerStack = new List<List<Follower>>();
 		private List<Transform> followerPoints = new List<Transform>();

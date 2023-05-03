@@ -7,7 +7,7 @@ namespace Stack
 		public Vector3 PreviousPosition { get; private set; }
 
 		public Rigidbody Rb => rb;
-		[SerializeField] protected Rigidbody rb;
+		[SerializeField] private Rigidbody rb;
 
 		protected virtual void Awake()
 		{

@@ -6,29 +6,29 @@ namespace Gates
 	{
 		private void OnEnable()
 		{
-			Player.Instance.MovingObject.OnFollowerRowAdded += OnFollowerRowAdded;
-			Player.Instance.MovingObject.OnFollowerRowRemoved += OnFollowerRowRemoved;
+			Player.Instance.FollowerController.OnFollowerRowAdded += OnFollowerRowAdded;
+			Player.Instance.FollowerController.OnFollowerRowRemoved += OnFollowerRowRemoved;
 		}
 
 		private void OnDisable()
 		{
 			if (Player.Instance)
 			{
-				Player.Instance.MovingObject.OnFollowerRowAdded -= OnFollowerRowAdded;
-				Player.Instance.MovingObject.OnFollowerRowRemoved -= OnFollowerRowRemoved;
+				Player.Instance.FollowerController.OnFollowerRowAdded -= OnFollowerRowAdded;
+				Player.Instance.FollowerController.OnFollowerRowRemoved -= OnFollowerRowRemoved;
 			}
 		}
 
 		protected override void OnEnter(Player player)
 		{
-			player.MovingObject.AddColumByCount(amount);
-			player.BoostSpeed();
-			gameObject.SetActive(false);
+			base.OnEnter(player);
+			
+			player.FollowerController.AddColumByCount(amount);
 		}
 
 		protected override void SetAmountText()
 		{
-			followerCount = amount * Player.Instance.MovingObject.CurrentStackLength;
+			followerCount = amount * Player.Instance.FollowerController.CurrentStackLength;
 			base.SetAmountText();
 		}
 
