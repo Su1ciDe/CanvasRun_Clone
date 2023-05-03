@@ -97,23 +97,31 @@ namespace Controllers
 
 		public void RemoveFollower(Follower follower)
 		{
-			follower.DestroySelf();
 			var coordinates = FollowerStack.GetCoordinates(follower);
-			FollowerStack[coordinates.x].RemoveAt(coordinates.y);
+			if (coordinates == (-1, -1)) return;
+			RemoveFollower(coordinates);
+		}
+
+		public void RemoveFollower((int x, int y) index)
+		{
+			FollowerStack[index.x][index.y].DestroySelf();
+			FollowerStack[index.x].RemoveAt(index.y);
 			TotalFollowerCount--;
 
-			if (FollowerStack[coordinates.x].Count > 0)
+			if (FollowerStack[index.x].Count > 0)
 			{
-				followerPoints[coordinates.x].DOKill();
-				followerPoints[coordinates.x].position = FollowerStack[coordinates.x][0].transform.position;
-				followerPoints[coordinates.x].DOLocalMove(new Vector3(FindFollowerPosition(coordinates.x, CurrentStackWidth), 0, 0), .15f).SetEase(Ease.Linear)
+				followerPoints[index.x].DOKill();
+				followerPoints[index.x].position = FollowerStack[index.x][0].transform.position;
+				followerPoints[index.x].DOLocalMove(new Vector3(FindFollowerPosition(index.x, CurrentStackWidth), 0, 0), .15f).SetEase(Ease.Linear)
 					.SetUpdate(UpdateType.Fixed);
 			}
 			else
 			{
-				RemoveColumn(coordinates.x);
+				RemoveColumn(index.x);
 			}
 		}
+
+		#region Column
 
 		private void AddColumn(int columnIndex, int columnCount, int rowCount, bool isAnimated = false)
 		{
@@ -158,7 +166,18 @@ namespace Controllers
 			}
 		}
 
-		public void RemoveColumn(int index)
+		public void RemoveColumByCount(int amount)
+		{
+			for (int i = 0; i < Mathf.Abs(amount); i++)
+			{
+				for (int j = 0; j < FollowerStack[i].Count; j++)
+				{
+					RemoveFollower((FollowerStack.Count - 1, 0));
+				}
+			}
+		}
+
+		private void RemoveColumn(int index)
 		{
 			FollowerStack.RemoveAt(index);
 			var removedFollowerPoint = followerPoints[index];
@@ -171,6 +190,10 @@ namespace Controllers
 
 			ReadjustFollowingPoints(true);
 		}
+
+		#endregion
+
+		#region Row
 
 		public void AddRowByCount(int rowCount)
 		{
@@ -190,10 +213,21 @@ namespace Controllers
 			}
 		}
 
-		public void RemoveRow(int index)
+		public void RemoveRowByCount(int amount)
 		{
-			OnFollowerRowRemoved?.Invoke();
+			for (int i = 0; i < Mathf.Abs(amount); i++)
+			{
+				for (int j = 0; j < CurrentStackWidth; j++)
+				{
+					RemoveFollower((j, FollowerStack[j].Count - 1));
+				}
+
+				CurrentStackLength--;
+				OnFollowerRowRemoved?.Invoke();
+			}
 		}
+
+		#endregion
 
 		private void ReadjustFollowingPoints(bool isAnimated = false)
 		{

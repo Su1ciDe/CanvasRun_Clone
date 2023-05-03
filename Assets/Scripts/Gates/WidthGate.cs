@@ -22,8 +22,11 @@ namespace Gates
 		protected override void OnEnter(Player player)
 		{
 			base.OnEnter(player);
-			
-			player.FollowerController.AddColumByCount(amount);
+
+			if (amount > 0)
+				player.FollowerController.AddColumByCount(amount);
+			else if (amount < 0)
+				player.FollowerController.RemoveColumByCount(amount);
 		}
 
 		protected override void SetAmountText()

@@ -29,7 +29,7 @@ namespace Gates
 
 		protected virtual void SetAmountText()
 		{
-			string sign = amount >= 0 ? "+" : "-";
+			string sign = amount >= 0 ? "+" : "";
 			txtAmount.SetText(sign + followerCount.ToString());
 		}
 	}

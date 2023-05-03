@@ -1,5 +1,4 @@
 ﻿using Gameplay;
-using UnityEngine;
 
 namespace Gates
 {
@@ -23,8 +22,11 @@ namespace Gates
 		protected override void OnEnter(Player player)
 		{
 			base.OnEnter(player);
-			
-			player.FollowerController.AddRowByCount(amount);
+
+			if (amount > 0)
+				player.FollowerController.AddRowByCount(amount);
+			else if (amount < 0)
+				player.FollowerController.RemoveRowByCount(amount);
 		}
 
 		protected override void SetAmountText()

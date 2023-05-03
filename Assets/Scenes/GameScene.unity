@@ -857,7 +857,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   followerPrefab: {fileID: 6422510967404229666, guid: b20e0fe5b17bb2b44a14b48c4535dc9a, type: 3}
   followerPointPrefab: {fileID: 2770292743772230478, guid: 839403e350857794bb5bbbefc1bc82ce, type: 3}
-  startingBallColumnCount: 4
+  startingBallColumnCount: 6
   startingBallRowCount: 10
   ballSize: 0.45
 --- !u!114 &711207630
@@ -2235,7 +2235,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1071095878543615089, guid: 43de3f77f92432647bc087fbd4edee3f, type: 3}
       propertyPath: amount
-      value: 10
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4639780538213902443, guid: 43de3f77f92432647bc087fbd4edee3f, type: 3}
       propertyPath: m_Name
@@ -2352,7 +2352,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6534729573606863619, guid: b973853ea4153224682d24c9743d425b, type: 3}
       propertyPath: amount
-      value: 4
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b973853ea4153224682d24c9743d425b, type: 3}
