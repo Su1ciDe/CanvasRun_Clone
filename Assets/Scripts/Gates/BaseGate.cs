@@ -7,18 +7,11 @@ namespace Gates
 	public abstract class BaseGate : MonoBehaviour
 	{
 		[SerializeField] protected int amount;
+		protected int followerCount;
 		[Space]
 		[SerializeField] private TextMeshPro txtAmount;
 
-		private void Awake()
-		{
-			SetAmountText();
-		}
-
-		private void OnValidate()
-		{
-			SetAmountText();
-		}
+		
 
 		private void OnTriggerEnter(Collider other)
 		{
@@ -30,10 +23,10 @@ namespace Gates
 
 		protected abstract void OnEnter(Player player);
 
-		private void SetAmountText()
+		protected virtual void SetAmountText()
 		{
 			string sign = amount >= 0 ? "+" : "-";
-			txtAmount.SetText(sign + amount.ToString());
+			txtAmount.SetText(sign + followerCount.ToString());
 		}
 	}
 }

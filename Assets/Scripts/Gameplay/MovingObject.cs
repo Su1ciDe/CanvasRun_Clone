@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using DG.Tweening;
 using Stack;
 using UnityEngine;
@@ -11,7 +12,16 @@ namespace Gameplay
 		public List<List<Follower>> FollowerStack = new List<List<Follower>>();
 		private List<Transform> followerPoints = new List<Transform>();
 
-		public int TotalFollowerCount { get; private set; }
+		private int totalFollowerCount;
+		public int TotalFollowerCount
+		{
+			get => totalFollowerCount;
+			private set
+			{
+				totalFollowerCount = value;
+				OnFollowerCountChanged?.Invoke(TotalFollowerCount);
+			}
+		}
 		public int CurrentStackWidth { get; private set; }
 		public int CurrentStackLength { get; private set; }
 
@@ -42,7 +52,7 @@ namespace Gameplay
 
 		private void Start()
 		{
-			InitFollowerStack();
+			StartCoroutine(InitFollowerStack());
 		}
 
 		private void FixedUpdate()
@@ -66,50 +76,58 @@ namespace Gameplay
 			}
 		}
 
-		private void InitFollowerStack()
+		private IEnumerator InitFollowerStack()
 		{
+			yield return null;
+
 			for (int i = 0; i < startingBallColumnCount; i++)
 			{
-				AddColumn(i, startingBallColumnCount, startingBallRowCount);
+				AddColumn(i, CurrentStackWidth, startingBallRowCount);
 			}
 
-			CurrentStackWidth = startingBallColumnCount;
 			CurrentStackLength = startingBallRowCount;
+			OnFollowerRowAdded?.Invoke();
 		}
 
-		public void AddColumn(int columnIndex, int columnCount, int rowCount, bool isAnimated = false)
+		private void AddColumn(int columnIndex, int columnCount, int rowCount, bool isAnimated = false)
 		{
+			// to choose a side for followerPoint (left/right)
+			int side = columnIndex % 2 == 0 ? -1 : 1;
 			var followerPointT = Instantiate(followerPoint, transform);
 			followerPoints.Add(followerPointT);
+			var posX = side * Mathf.FloorToInt(columnCount / 2f) * ballSize;
 			if (!isAnimated)
-			{
-				followerPointT.localPosition = new Vector3((columnIndex - columnCount / 2f + ballSize) * ballSize, 0, 0);
-			}
+				followerPointT.localPosition = posX * Vector3.right;
 			else
-			{
-				int side = columnIndex < CurrentStackWidth / 2f ? -1 : 1;
-				followerPointT.DOLocalMoveX(side * (columnIndex - columnCount / 2f + ballSize), 1).SetSpeedBased(true).SetEase(Ease.Linear);
-			}
+				followerPointT.DOLocalMoveX(posX, 3f).SetSpeedBased(true).SetEase(Ease.Linear);
 
 			var tempRowFollowers = new List<Follower>();
 			for (int j = 0; j < rowCount; j++)
 			{
-				var followerPos = new Vector3(transform.position.x + (columnIndex - columnCount / 2f + ballSize) * ballSize, ballSize / 2f, transform.position.z);
+				var followerPos = new Vector3(followerPointT.transform.position.x, ballSize / 2f, transform.position.z);
 				// TODO: change with pooling
 				var follower = Instantiate(followerPrefab, followerPos, Quaternion.identity);
-				tempRowFollowers.Add(follower);
 
+				tempRowFollowers.Add(follower);
 				TotalFollowerCount++;
-				OnFollowerCountChanged?.Invoke(TotalFollowerCount);
 			}
 
-			FollowerStack.Add(tempRowFollowers);
+			if (side.Equals(1))
+				FollowerStack.Add(tempRowFollowers);
+			else
+				FollowerStack.Insert(0, tempRowFollowers);
 
+			CurrentStackWidth++;
 			OnFollowerColumnAdded?.Invoke();
 		}
 
 		public void AddColumByCount(int amount)
 		{
+			int columnCount = CurrentStackWidth + amount;
+			for (int i = CurrentStackWidth; i < columnCount; i++)
+			{
+				AddColumn(i, CurrentStackWidth, CurrentStackLength, true);
+			}
 		}
 
 		public void RemoveColumn()
@@ -122,12 +140,8 @@ namespace Gameplay
 			OnFollowerColumnRemoved?.Invoke();
 		}
 
-		public void AddRowByCount(int amount)
+		public void AddRowByCount(int rowCount)
 		{
-			int rowCount = amount / CurrentStackWidth;
-			int remainder = amount % CurrentStackWidth;
-			rowCount = remainder.Equals(0) ? rowCount : rowCount - 1;
-
 			// row by row
 			for (int i = 0; i < rowCount; i++)
 			{
@@ -137,29 +151,18 @@ namespace Gameplay
 					var follower = Instantiate(followerPrefab, followerPos, Quaternion.identity);
 
 					TotalFollowerCount++;
-					OnFollowerCountChanged?.Invoke(TotalFollowerCount);
 
 					FollowerStack[j].Add(follower);
 				}
 
+				CurrentStackLength++;
 				OnFollowerRowAdded?.Invoke();
-			}
-
-			// add the remainder
-			for (int i = 0; i < remainder; i++)
-			{
-				var followerPos = new Vector3(transform.position.x + (i - CurrentStackWidth / 2f + ballSize) * ballSize, ballSize / 2f, 0);
-				var follower = Instantiate(followerPrefab, followerPos, Quaternion.identity);
-
-				TotalFollowerCount++;
-				OnFollowerCountChanged?.Invoke(TotalFollowerCount);
-
-				FollowerStack[i].Add(follower);
 			}
 		}
 
 		public void RemoveRow()
 		{
+			OnFollowerRowRemoved?.Invoke();
 		}
 	}
 }

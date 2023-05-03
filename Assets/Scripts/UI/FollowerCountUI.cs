@@ -10,6 +10,11 @@ namespace UI
 
 		private void Start()
 		{
+			OnFollowerCountChanged(Player.Instance.MovingObject.TotalFollowerCount);
+		}
+
+		private void OnEnable()
+		{
 			Player.Instance.MovingObject.OnFollowerCountChanged += OnFollowerCountChanged;
 		}
 

@@ -408,10 +408,10 @@ GameObject:
   m_Component:
   - component: {fileID: 367926489}
   - component: {fileID: 367926491}
+  - component: {fileID: 367926494}
   - component: {fileID: 367926488}
   - component: {fileID: 367926490}
   - component: {fileID: 367926493}
-  - component: {fileID: 367926494}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -431,6 +431,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd1e34a6ff144c4183ebb1d1312d639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  movingObject: {fileID: 711207627}
+  trigger: {fileID: 97433652}
 --- !u!4 &367926489
 Transform:
   m_ObjectHideFlags: 0
@@ -850,7 +852,7 @@ MonoBehaviour:
   followerPrefab: {fileID: 6422510967404229666, guid: b20e0fe5b17bb2b44a14b48c4535dc9a, type: 3}
   startingBallColumnCount: 4
   startingBallRowCount: 10
-  ballSize: 0.45
+  ballSize: 0.5
 --- !u!114 &711207630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1902,11 +1904,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1071095878543615089, guid: 43de3f77f92432647bc087fbd4edee3f, type: 3}
       propertyPath: amount
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 2383616974025195199, guid: 43de3f77f92432647bc087fbd4edee3f, type: 3}
-      propertyPath: m_text
-      value: +108
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4639780538213902443, guid: 43de3f77f92432647bc087fbd4edee3f, type: 3}
       propertyPath: m_Name
@@ -2013,13 +2011,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: WidthGate
       objectReference: {fileID: 0}
-    - target: {fileID: 5650264084151001721, guid: b973853ea4153224682d24c9743d425b, type: 3}
-      propertyPath: m_text
-      value: +30
-      objectReference: {fileID: 0}
     - target: {fileID: 6534729573606863619, guid: b973853ea4153224682d24c9743d425b, type: 3}
       propertyPath: amount
-      value: 30
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b973853ea4153224682d24c9743d425b, type: 3}
