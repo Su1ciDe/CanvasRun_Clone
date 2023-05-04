@@ -39,14 +39,14 @@ namespace UI
 
 		private void OnCollectGem(Gem gem)
 		{
-			var imgCoin = ObjectPooler.Instance.Spawn(GEM_POOL, GameManager.MainCamera.WorldToScreenPoint(gem.transform.position), transform);
-			imgCoin.transform.DOComplete();
-			imgCoin.transform.DOMove(imageTarget.position, diamondAnimDuration).SetEase(Ease.InBack).OnComplete(() =>
+			var imgGem = ObjectPooler.Instance.Spawn(GEM_POOL, GameManager.MainCamera.WorldToScreenPoint(gem.transform.position), transform);
+			imgGem.transform.DOComplete();
+			imgGem.transform.DOMove(imageTarget.position, diamondAnimDuration).SetEase(Ease.InBack).OnComplete(() =>
 			{
 				imageTarget.DOComplete();
 				imageTarget.DOPunchScale(Vector3.one * .9f, .2f, 2, .5f);
 
-				imgCoin.SetActive(false);
+				imgGem.gameObject.SetActive(false);
 				SetGemText(GameManager.GemScore);
 			});
 		}

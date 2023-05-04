@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 225690799}
   - component: {fileID: 225690798}
   m_Layer: 0
-  m_Name: ObjectPooler
+  m_Name: GenericObjectPooler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
