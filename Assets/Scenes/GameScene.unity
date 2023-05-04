@@ -1658,10 +1658,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1758666534}
+  - component: {fileID: 1758666537}
   - component: {fileID: 1758666535}
   - component: {fileID: 1758666536}
   - component: {fileID: 1758666538}
-  - component: {fileID: 1758666537}
   m_Layer: 5
   m_Name: TapToStartUI
   m_TagString: Untagged

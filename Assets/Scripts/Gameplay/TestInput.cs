@@ -10,6 +10,7 @@ namespace Gameplay
 		public event UnityAction<float> OnDrag;
 
 		[SerializeField] private float dragMultiplier = 1f;
+		[SerializeField] private float maxDragSpeed = 1f;
 
 		private float previousPositionX;
 		private float deltaX;
@@ -31,7 +32,7 @@ namespace Gameplay
 			if (Input.GetMouseButton(0))
 			{
 				deltaX = Input.mousePosition.x - previousPositionX;
-				OnDrag?.Invoke(deltaX * dragMultiplier * Time.deltaTime);
+				OnDrag?.Invoke(Mathf.Clamp(deltaX * dragMultiplier * Time.deltaTime, -maxDragSpeed, maxDragSpeed));
 
 				previousPositionX = Input.mousePosition.x;
 			}
