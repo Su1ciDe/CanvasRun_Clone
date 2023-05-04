@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Finish
 {
-	public class FinishWithHoles : MonoBehaviour
+	public class FinishWithHoles : Finish
 	{
 		[Header("Camera")]
 		[SerializeField] private CinemachineVirtualCamera vcamFinish;

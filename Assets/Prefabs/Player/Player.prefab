@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 7321142217451814534}
   - component: {fileID: 7321142217451814528}
   - component: {fileID: 7321142217451814530}
+  - component: {fileID: 6278622625123824689}
   - component: {fileID: 7321142217451814533}
   m_Layer: 6
   m_Name: Player
@@ -352,7 +353,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveForwardSpeed: 6
   boostDuration: 1
---- !u!114 &7321142217451814533
+--- !u!114 &6278622625123824689
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -360,6 +361,20 @@ MonoBehaviour:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7321142217451814543}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b81ca026deb3415abd2cb92b5be1f549, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dragMultiplier: 2
+  maxDragSpeed: 0.6
+--- !u!114 &7321142217451814533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7321142217451814543}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59c9df34198e475d8d392cfd18fd1371, type: 3}
   m_Name: 
@@ -654,6 +669,7 @@ MonoBehaviour:
   followerPointPrefab: {fileID: 2770292743772230478, guid: 839403e350857794bb5bbbefc1bc82ce, type: 3}
   startingBallColumnCount: 4
   startingBallRowCount: 10
+  maxFollowerCount: 600
   ballSize: 0.45
 --- !u!114 &7321142218350037142
 MonoBehaviour:
