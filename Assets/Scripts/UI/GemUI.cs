@@ -43,6 +43,7 @@ namespace UI
 			imgCoin.transform.DOComplete();
 			imgCoin.transform.DOMove(imageTarget.position, diamondAnimDuration).SetEase(Ease.InBack).OnComplete(() =>
 			{
+				imageTarget.DOComplete();
 				imageTarget.DOPunchScale(Vector3.one * .9f, .2f, 2, .5f);
 
 				imgCoin.SetActive(false);

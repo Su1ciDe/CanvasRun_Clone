@@ -161,7 +161,7 @@ namespace Controllers
 			var tempRowFollowers = new List<Follower>();
 			for (int j = 0; j < rowCount; j++)
 			{
-				var followerPos = new Vector3(followerPointT.transform.position.x, ballSize / 2f, transform.position.z - j * ballSize);
+				var followerPos = new Vector3(followerPointT.transform.position.x, ballSize / 2f, transform.position.z - j * ballSize / 2f);
 				var follower = SpawnFollower(followerPos, j);
 
 				tempRowFollowers.Add(follower);
