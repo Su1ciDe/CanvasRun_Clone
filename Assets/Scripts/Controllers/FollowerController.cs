@@ -6,6 +6,7 @@ using Managers;
 using Stack;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Pool;
 using Utilities;
 
 namespace Controllers
@@ -37,10 +38,14 @@ namespace Controllers
 		[Space]
 		[SerializeField] private int startingBallColumnCount = 4;
 		[SerializeField] private int startingBallRowCount = 10;
+		[SerializeField] private int maxFollowerCount = 600;
 
 		public float BallSize => ballSize;
 		[Space]
 		[SerializeField] private float ballSize = .1f;
+
+		private ObjectPool<Follower> followerPool;
+		private List<Follower> disposedFollowers = new List<Follower>();
 
 		public event UnityAction OnFollowerColumnAdded;
 		public event UnityAction OnFollowerColumnRemoved;
@@ -56,12 +61,29 @@ namespace Controllers
 
 		private void Start()
 		{
+			InitFollowerPool();
 			StartCoroutine(InitFollowerStack());
 		}
 
 		private void FixedUpdate()
 		{
 			Follow();
+		}
+
+		private void OnEnable()
+		{
+			LevelManager.OnLevelUnload += OnLevelUnloaded;
+		}
+
+		private void OnDisable()
+		{
+			LevelManager.OnLevelUnload -= OnLevelUnloaded;
+		}
+
+		private void OnLevelUnloaded()
+		{
+			foreach (var follower in disposedFollowers)
+				followerPool.Release(follower);
 		}
 
 		private void Follow()
@@ -82,6 +104,12 @@ namespace Controllers
 			}
 		}
 
+		private void InitFollowerPool()
+		{
+			followerPool = new ObjectPool<Follower>(() => Instantiate(followerPrefab), follower => follower.Spawn(), follower => follower.Despawn(),
+				follower => Destroy(follower.gameObject), true, maxFollowerCount, maxFollowerCount);
+		}
+
 		private IEnumerator InitFollowerStack()
 		{
 			// Wait one frame for the subscriptions
@@ -94,14 +122,14 @@ namespace Controllers
 
 			CurrentStackLength = startingBallRowCount;
 			OnFollowerRowAdded?.Invoke();
-
-			// ReadjustFollowingPoints();
 		}
 
 		private Follower SpawnFollower(Vector3 pos, int rowIndex)
 		{
-			// TODO: change with pooling
-			var follower = Instantiate(followerPrefab, pos, Quaternion.identity);
+			if (TotalFollowerCount >= maxFollowerCount) return null;
+			// var follower = ObjectPooler.Instance.Spawn("Ball", pos).GetComponent<Follower>();
+			var follower = followerPool.Get();
+			follower.transform.position = pos;
 			follower.ChangeColor(rowIndex);
 			TotalFollowerCount++;
 			return follower;
@@ -116,7 +144,8 @@ namespace Controllers
 
 		public void RemoveFollower((int x, int y) index)
 		{
-			FollowerStack[index.x][index.y].DestroySelf();
+			// FollowerStack[index.x][index.y].Despawn();
+			followerPool.Release(FollowerStack[index.x][index.y]);
 			RemoveFollowerFromStack(index);
 
 			if (FollowerStack[index.x].Count > 0)
@@ -141,6 +170,11 @@ namespace Controllers
 				LevelManager.Instance.Lose();
 		}
 
+		public void AddFollowerToBeDisposed((int x, int y) index)
+		{
+			disposedFollowers.Add(FollowerStack[index.x][index.y]);
+		}
+
 		#region Column
 
 		private void AddColumn(int columnIndex, int columnCount, int rowCount, bool isAnimated = false)
@@ -163,6 +197,7 @@ namespace Controllers
 			{
 				var followerPos = new Vector3(followerPointT.transform.position.x, ballSize / 2f, transform.position.z - j * ballSize / 2f);
 				var follower = SpawnFollower(followerPos, j);
+				if (!follower) return;
 
 				tempRowFollowers.Add(follower);
 			}
@@ -223,6 +258,7 @@ namespace Controllers
 				{
 					var followerPos = new Vector3(transform.position.x + FindFollowerPosition(j, CurrentStackWidth) * ballSize, ballSize / 2f, 0);
 					var follower = SpawnFollower(followerPos, CurrentStackLength);
+					if (!follower) return;
 
 					FollowerStack[j].Add(follower);
 				}
