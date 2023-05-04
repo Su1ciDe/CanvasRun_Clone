@@ -36,7 +36,7 @@ namespace Gameplay
 						break;
 					case TouchPhase.Moved:
 						deltaX = touch.position.x - previousPositionX;
-						OnDrag?.Invoke(Mathf.Clamp(deltaX * dragMultiplier * Time.deltaTime, -maxDragSpeed, -maxDragSpeed));
+						OnDrag?.Invoke(Mathf.Clamp(deltaX * dragMultiplier * Time.deltaTime, -maxDragSpeed, maxDragSpeed));
 						previousPositionX = touch.position.x;
 
 						break;
