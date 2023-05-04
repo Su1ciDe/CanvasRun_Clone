@@ -2,7 +2,7 @@
 
 namespace Stack
 {
-	public class Follower : MonoBehaviour
+	public abstract class Follower : MonoBehaviour
 	{
 		public Vector3 PreviousPosition { get; private set; }
 
@@ -22,7 +22,12 @@ namespace Stack
 			PreviousPosition = rb.position;
 		}
 
-		public void DestroySelf()
+		public virtual void Spawn()
+		{
+			gameObject.SetActive(true);
+		}
+		
+		public virtual void Despawn()
 		{
 			gameObject.SetActive(false);
 		}

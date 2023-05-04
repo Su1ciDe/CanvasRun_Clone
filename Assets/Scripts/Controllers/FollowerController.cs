@@ -106,8 +106,8 @@ namespace Controllers
 
 		private void InitFollowerPool()
 		{
-			followerPool = new ObjectPool<Follower>(() => Instantiate(followerPrefab), follower => follower.Spawn(), follower => follower.Despawn(),
-				follower => Destroy(follower.gameObject), true, maxFollowerCount, maxFollowerCount);
+			followerPool = new ObjectPool<Follower>(() => Instantiate(followerPrefab,ObjectPooler.Instance.transform), follower => follower.Spawn(), follower => follower.Despawn(),
+				follower => Destroy(follower.gameObject), true, maxFollowerCount, maxFollowerCount + 100);
 		}
 
 		private IEnumerator InitFollowerStack()

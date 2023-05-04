@@ -65,6 +65,7 @@ namespace Finish
 					if (followerController.FollowerStack[j].Count <= 0) continue;
 
 					var follower = followerController.FollowerStack[j][0];
+					followerController.AddFollowerToBeDisposed((j, 0));
 					followerController.RemoveFollowerFromStack((j, 0));
 					follower.AddForce(Mathf.Clamp(force * FORCE_MULTIPLIER, 0, 1000) * new Vector3(Random.Range(-2.5f, 2.5f), Random.Range(0f, 1f), 10).normalized);
 
