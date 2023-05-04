@@ -12,7 +12,9 @@ namespace Controllers
 {
 	public class FollowerController : MonoBehaviour
 	{
-		public bool CanFollow { get; set; } = true;
+		public bool CanFollow { get; set; }
+
+		public FollowerControllerMovement FollowerControllerMovement { get; private set; }
 
 		public List<List<Follower>> FollowerStack = new List<List<Follower>>();
 		private List<Transform> followerPoints = new List<Transform>();
@@ -48,6 +50,7 @@ namespace Controllers
 
 		private void Awake()
 		{
+			FollowerControllerMovement = GetComponent<FollowerControllerMovement>();
 			transform.localPosition = new Vector3(0, ballSize / 2f, 0);
 		}
 
@@ -92,11 +95,12 @@ namespace Controllers
 			CurrentStackLength = startingBallRowCount;
 			OnFollowerRowAdded?.Invoke();
 
-			ReadjustFollowingPoints();
+			// ReadjustFollowingPoints();
 		}
 
 		private Follower SpawnFollower(Vector3 pos, int rowIndex)
 		{
+			// TODO: change with pooling
 			var follower = Instantiate(followerPrefab, pos, Quaternion.identity);
 			follower.ChangeColor(rowIndex);
 			TotalFollowerCount++;
@@ -132,7 +136,7 @@ namespace Controllers
 		{
 			FollowerStack[index.x].RemoveAt(index.y);
 			TotalFollowerCount--;
-			
+
 			if (TotalFollowerCount.Equals(0) && !Player.Instance.IsLevelFinished)
 				LevelManager.Instance.Lose();
 		}
@@ -157,8 +161,7 @@ namespace Controllers
 			var tempRowFollowers = new List<Follower>();
 			for (int j = 0; j < rowCount; j++)
 			{
-				var followerPos = new Vector3(followerPointT.transform.position.x, ballSize / 2f, transform.position.z);
-				// TODO: change with pooling
+				var followerPos = new Vector3(followerPointT.transform.position.x, ballSize / 2f, transform.position.z - j * ballSize);
 				var follower = SpawnFollower(followerPos, j);
 
 				tempRowFollowers.Add(follower);

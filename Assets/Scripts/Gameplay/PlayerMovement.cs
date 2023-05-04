@@ -5,7 +5,7 @@ namespace Gameplay
 {
 	public class PlayerMovement : MonoBehaviour
 	{
-		public bool CanMoveForward { get; set; } = true;
+		public bool CanMoveForward { get; set; }
 
 		[SerializeField] private float moveForwardSpeed = 1;
 		[Header("Boost")]

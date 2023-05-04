@@ -16,6 +16,11 @@ namespace Collectibles
 				.SetSpeedBased(true);
 		}
 
+		private void OnDisable()
+		{
+			transform.GetChild(0).DOKill();
+		}
+
 		protected override void OnCollect(Follower follower)
 		{
 			base.OnCollect(follower);

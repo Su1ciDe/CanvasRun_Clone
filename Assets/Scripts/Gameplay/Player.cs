@@ -12,7 +12,7 @@ namespace Gameplay
 	public class Player : Singleton<Player>
 	{
 		public bool IsLevelFinished { get; set; }
-		
+
 		public IInput Input { get; private set; }
 		public PlayerMovement PlayerMovement { get; private set; }
 		public FollowerController FollowerController => followerController;
@@ -56,6 +56,7 @@ namespace Gameplay
 		{
 			Input.CanInput = true;
 			FollowerController.CanFollow = true;
+			FollowerController.FollowerControllerMovement.CanMove = true;
 			PlayerMovement.CanMoveForward = true;
 		}
 
@@ -63,6 +64,7 @@ namespace Gameplay
 		{
 			Input.CanInput = false;
 			FollowerController.CanFollow = false;
+			FollowerController.FollowerControllerMovement.CanMove = false;
 			PlayerMovement.CanMoveForward = false;
 		}
 
@@ -70,6 +72,7 @@ namespace Gameplay
 		{
 			Input.CanInput = false;
 			FollowerController.CanFollow = false;
+			FollowerController.FollowerControllerMovement.CanMove = false;
 			PlayerMovement.CanMoveForward = false;
 		}
 
@@ -80,6 +83,7 @@ namespace Gameplay
 			IsLevelFinished = true;
 			Input.CanInput = false;
 			FollowerController.CanFollow = false;
+			FollowerController.FollowerControllerMovement.CanMove = false;
 			PlayerMovement.CanMoveForward = false;
 		}
 

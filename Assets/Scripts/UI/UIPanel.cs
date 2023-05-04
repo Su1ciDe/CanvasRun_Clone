@@ -4,6 +4,10 @@ namespace UI
 {
 	public abstract class UIPanel : MonoBehaviour
 	{
+		public virtual void Init()
+		{
+		}
+
 		public virtual void Show()
 		{
 			gameObject.SetActive(true);

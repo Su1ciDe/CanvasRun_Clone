@@ -18,9 +18,9 @@ namespace Finish
 
 		private const float DELAY = .1f;
 		private WaitForSeconds waitDelay;
-		private const float FORCE_MULTIPLIER = 15f;
+		private const float FORCE_MULTIPLIER = 10f;
 
-		private const float FINISH_TIMER = 5;
+		private const float FINISH_TIMER = 4;
 		private WaitForSeconds waitForFinish;
 		private Coroutine waitForFinishCoroutine;
 
@@ -66,7 +66,7 @@ namespace Finish
 
 					var follower = followerController.FollowerStack[j][0];
 					followerController.RemoveFollowerFromStack((j, 0));
-					follower.AddForce(force * FORCE_MULTIPLIER * new Vector3(Random.Range(-2.5f, 2.5f), Random.Range(0f, 1f), 10).normalized);
+					follower.AddForce(Mathf.Clamp(force * FORCE_MULTIPLIER, 0, 1000) * new Vector3(Random.Range(-2.5f, 2.5f), Random.Range(0f, 1f), 10).normalized);
 
 					targetGroup.AddMember(follower.transform, 1, 1);
 				}
@@ -88,6 +88,11 @@ namespace Finish
 
 				waitForFinishCoroutine = StartCoroutine(WaitForFinish());
 			}
+
+			if (multiplier.Equals(100))
+			{
+				vcamFinish.m_Follow = null;
+			}
 		}
 
 		private IEnumerator WaitForFinish()
@@ -95,7 +100,6 @@ namespace Finish
 			yield return waitForFinish;
 
 			isFinished = true;
-			Debug.Log("finish");
 			LevelManager.Instance.Win();
 		}
 	}

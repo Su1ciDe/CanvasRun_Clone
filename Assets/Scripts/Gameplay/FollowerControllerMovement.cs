@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Gameplay
 {
-	public class MovingObjectMovement : MonoBehaviour
+	public class FollowerControllerMovement : MonoBehaviour
 	{
 		public bool CanMove { get; set; } = true;
 		private float delta;
@@ -12,7 +12,7 @@ namespace Gameplay
 
 		private Vector3 objectPos;
 		private Vector3 objectRot;
-		private const float rotationMultiplier = 90;
+		private const float ROTATION_MULTIPLIER = 90;
 
 		[SerializeField] private float leftLimit = -1;
 		[SerializeField] private float rightLimit = 1;
@@ -55,7 +55,7 @@ namespace Gameplay
 
 		private void Rotate()
 		{
-			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.AngleAxis(delta * rotationMultiplier, Vector3.up), Time.deltaTime * 10);
+			transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.AngleAxis(delta * ROTATION_MULTIPLIER, Vector3.up), Time.deltaTime * 10);
 		}
 
 		private void OnInputDrag(float deltaX)
